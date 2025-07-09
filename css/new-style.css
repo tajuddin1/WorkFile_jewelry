@@ -1392,6 +1392,9 @@ footer iconify-icon {
   .d-flex.footer-col {
     max-width: 40%;
   }
+    span.badge.code.html {
+      top: -40px;
+    }
 }
 
 @media (max-width: 425px) {
