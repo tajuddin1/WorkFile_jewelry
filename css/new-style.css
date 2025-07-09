@@ -1368,6 +1368,9 @@ footer iconify-icon {
     bottom: -55px;
     left: 180px;
   }
+    span.badge.code {
+      display: none !important;
+    }
 }
 
 @media (max-width: 590px) {
