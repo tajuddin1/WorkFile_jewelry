@@ -64,7 +64,7 @@ header.header-section {
   min-height: 112px;
   top: -100%;
   transition: 0.4s ease;
-  z-index: 99999;
+  z-index: 1050;
 }
 
 header.header-section.sticky .topbar {
@@ -100,6 +100,9 @@ header.header-section.sticky {
 .border-theme-primary {
   border-color: var(--theme-color-primary) !important;
 }
+.border-theme-secondary {
+  border-color: var(--theme-color-secondary) !important;
+}
 
 .bg-soft-primary {
   background-color: rgb(56, 125, 187, .1) !important;
@@ -129,7 +132,20 @@ header.header-section.sticky {
 
 .btn-theme-light:hover {
   background-color: var(--theme-color-secondary) !important;
-  border-color: var(--theme-color-secondary) !important;
+  border-color: var(--theme-color-white) !important;
+  color: var(--theme-color-white) !important;
+}
+
+.btn-theme-outline-light {
+  white-space: nowrap;
+  background-color: transparent !important;
+  border-color: var(--theme-color-white) !important;
+  color: var(--theme-color-white) !important;
+}
+
+.btn-theme-outline-light:hover {
+  background-color: var(--theme-color-secondary) !important;
+  border-color: var(--theme-color-white) !important;
   color: var(--theme-color-white) !important;
 }
 
@@ -145,6 +161,29 @@ header.header-section.sticky {
   color: var(--theme-color-white) !important;
 }
 
+.btn-check:checked+.btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check)+.btn:active {
+  background-color: var(--theme-color-primary) !important;
+  border-color: var(--theme-color-primary) !important;
+  color: var(--theme-color-white) !important;
+}
+
+.btn-group>.btn-group:not(:first-child)>.btn,
+.btn-group>.btn:nth-child(n+3),
+.btn-group>:not(.btn-check)+.btn {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.btn-group>.btn-group:not(:last-child)>.btn,
+.btn-group>.btn.dropdown-toggle-split:first-child,
+.btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
 
 .badge {
   letter-spacing: .5px;
@@ -928,6 +967,47 @@ footer iconify-icon {
   top: -10px;
 }
 
+.pricing-section{
+  margin-top: -120px;
+}
+
+.plan-price{
+  font-size: 48px;
+  font-weight: 400;
+}
+.plan-price span{
+  font-size: 28px;
+}
+
+/* Version 1 */
+/* ul.feature-list li {
+  border-bottom: 1px solid #ddd !important;
+  padding: .5rem 0px !important;
+} */
+
+/* Version 2 */
+ul.feature-list li {
+  position: relative;
+  border: 0 !important;
+  padding: 5px 0px !important;
+  padding-left: 20px !important;
+  text-align: start !important;
+}
+.feature-list>li::before {
+  content: '';
+  position: absolute;
+  left: 0px;
+  top: 6px;
+  width: 18px;
+  height: 18px;
+  background-image: url(../images/check2.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.feature-list.white>li::before {
+  filter: brightness(5);
+}
 
 /* =====><><=======><><=========><><=========> <><><><><><><> ??? <><><><><><><><> <=========><><=========><><=======><><===== */
 @media (max-width: 1399px) {
