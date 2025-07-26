@@ -216,12 +216,12 @@
     <div class="container pt-3 pb-5 py-sm-5">
       <h5 class="title-secondary text-center mb-0">Jewelry POS Software</h5>
       <h2 class="title-secondary text-center mb-4">Choose Your Plan</h2>
-        <div class="d-flex justify-content-center mb-4">
-          <div class="btn-group">
-            <button class="btn btn-theme-outline-primary rounded-pill px-5 active" id="monthlyBtn">Monthly</button>
-            <button class="btn btn-theme-outline-primary rounded-pill px-5" id="annualBtn">Annual</button>
-          </div>
+      <div class="d-flex justify-content-center mb-4">
+        <div class="btn-group">
+          <button type="button" class="btn btn-theme-outline-primary rounded-pill px-5 billing-toggle active" id="monthlyBtn" data-billing="monthly">Monthly</button>
+          <button type="button" class="btn btn-theme-outline-primary rounded-pill px-5 billing-toggle" id="annualBtn" data-billing="annually">Annual</button>
         </div>
+      </div>
     </div>
   </section>
   <section id="pricingSection" class="pricing-section">
@@ -233,7 +233,7 @@
             <div class="text-primary fw-semibold plan-price price" data-plan="0">$--/<span>mo</span></div>
             <ul class="list-unstyled text-center mb-0 mt-4">
               <li class="mb-3">
-                <a href="https://www.wjewel.com/request-free-quote/index.php"
+                <a href="https://www.wjewel.com/request-demo.php"
                   class="btn btn-primary btn-theme-primary d-flex justify-content-center">Request A Demo</a>
               </li>
               <li>
@@ -268,7 +268,7 @@
             <div class="text-primary fw-semibold plan-price price" data-plan="1">$--/<span>mo</span></div>
             <ul class="list-unstyled text-center mb-0 mt-4">
               <li class="mb-3">
-                <a href="https://www.wjewel.com/request-free-quote/index.php"
+                <a href="https://www.wjewel.com/request-demo.php"
                   class="btn btn-primary btn-theme-primary d-flex justify-content-center">Request A Demo</a>
               </li>
               <li>
@@ -305,7 +305,7 @@
             <div class="text-white fw-semibold plan-price price" data-plan="2">$--/<span>mo</span></div>
             <ul class="list-unstyled text-center mb-0 mt-4">
               <li class="mb-3">
-                <a href="https://www.wjewel.com/request-free-quote/index.php"
+                <a href="https://www.wjewel.com/request-demo.php"
                   class="btn btn-primary btn-theme-light d-flex justify-content-center">Request A Demo</a>
               </li>
               <li>
@@ -339,7 +339,7 @@
             <div class="text-primary fw-semibold plan-price price" data-plan="3">$--/<span>mo</span></div>
             <ul class="list-unstyled text-center mb-0 mt-4">
               <li class="mb-3">
-                <a href="https://www.wjewel.com/request-free-quote/index.php"
+                <a href="https://www.wjewel.com/request-demo.php"
                   class="btn btn-primary btn-theme-primary d-flex justify-content-center">Request A Demo</a>
               </li>
               <li>
@@ -388,25 +388,25 @@
             <!-- Phone -->
             <div class="col-md-6">
               <label class="form-label small">Phone <span class="text-danger">*</span></label>
-              <input type="number" class="form-control small" required>
+              <input type="number" name="phone" class="form-control small" required>
             </div>
   
             <!-- Email -->
             <div class="col-md-6">
               <label class="form-label small">Email <span class="text-danger">*</span></label>
-              <input type="email" class="form-control small" required>
+              <input type="email" name="email" class="form-control small" required>
             </div>
   
             <!-- Name -->
             <div class="col-md-6">
               <label class="form-label small">Name <span class="text-danger">*</span></label>
-              <input type="text" class="form-control small" required>
+              <input type="text" name="name" class="form-control small" required>
             </div>
   
             <!-- Company -->
             <div class="col-md-6">
               <label class="form-label small">Company <span class="text-danger">*</span></label>
-              <input type="text" class="form-control small" required>
+              <input type="text" name="company" class="form-control small" required>
             </div>
   
             <!-- Submit Button -->
@@ -531,57 +531,82 @@
   <script src="js/owl.carousel.min.js"></script>
   <script src="js/new-script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const modalEl = document.getElementById('pricingModal');
-      const formEl = document.getElementById('pricingForm');
-      const annualBtn = document.getElementById('annualBtn');
-      const monthlyBtn = document.getElementById('monthlyBtn');
+    document.addEventListener("DOMContentLoaded", function () {
+      const modal = new bootstrap.Modal(document.getElementById("pricingModal"), {
+        backdrop: 'static',
+        keyboard: false
+      });
+      const pricingForm = document.getElementById("pricingForm");
+      const formInputs = pricingForm.querySelectorAll("input");
+      const billingButtons = document.querySelectorAll(".billing-toggle");
+      const planPrices = document.querySelectorAll(".plan-price");
 
-      const pricingData = {
-        annual: [99, 199, 299, 399],   // Annual prices
-        monthly: [129, 229, 329, 429], // Monthly prices
-      };
+      planPrices.forEach(p => p.innerHTML = "$--/<span>mo</span>");
+      modal.show();
 
-      function injectPrices(type) {
-        localStorage.setItem('pricingPlanType', type);
+      const storedData = JSON.parse(localStorage.getItem("pricingFormData") || "{}");
+      formInputs.forEach(input => {
+        if (storedData[input.name]) {
+          input.value = storedData[input.name];
+        }
+      });
 
-        document.querySelectorAll(".price").forEach(el => {
-          const index = parseInt(el.getAttribute("data-plan"));
-          el.innerHTML = `$${pricingData[type][index]}/<span>mo</span>`;
+      if (storedData.billing) {
+        billingButtons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.billing === storedData.billing);
         });
-
-        annualBtn?.classList.toggle('active', type === 'annual');
-        monthlyBtn?.classList.toggle('active', type === 'monthly');
       }
 
-      const formSubmitted = localStorage.getItem('pricingFormSubmitted');
-      const savedPlanType = localStorage.getItem('pricingPlanType') || 'annual';
+      function injectPrices(billing) {
+        const monthlyPrices = [129, 229, 329, 429];
+        const annuallyPrices = [99, 199, 299, 399];
+        const prices = billing === "annually" ? annuallyPrices : monthlyPrices;
 
-      if (!formSubmitted) {
-        const myModal = new bootstrap.Modal(modalEl, {
-          backdrop: 'static',
-          keyboard: false,
+        document.querySelectorAll(".plan-price").forEach((price, index) => {
+          price.innerHTML = `$${prices[index]}/<span>mo</span>`;
         });
-        myModal.show();
-
-        formEl.addEventListener('submit', function (e) {
-          e.preventDefault();
-
-          if (this.checkValidity()) {
-            localStorage.setItem('pricingFormSubmitted', 'true');
-            injectPrices(savedPlanType);
-            myModal.hide();
-          } else {
-            this.reportValidity();
-          }
-        });
-      } else {
-        injectPrices(savedPlanType);
       }
 
-      // Toggle pricing on button click
-      annualBtn?.addEventListener('click', () => injectPrices('annual'));
-      monthlyBtn?.addEventListener('click', () => injectPrices('monthly'));
+      // ✅ Billing button click handling
+      billingButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          billingButtons.forEach(btn => btn.classList.remove("active"));
+          button.classList.add("active");
+
+          const billing = button.dataset.billing;
+
+          // Save billing to localStorage
+          const data = JSON.parse(localStorage.getItem("pricingFormData") || "{}");
+          data.billing = billing;
+          localStorage.setItem("pricingFormData", JSON.stringify(data));
+
+          // Inject prices when user manually toggles
+          injectPrices(billing);
+        });
+      });
+
+      // ✅ Form submit handling
+      pricingForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(pricingForm);
+        const data = {
+          phone: formData.get("phone")?.trim(),
+          email: formData.get("email")?.trim(),
+          name: formData.get("name")?.trim(),
+          company: formData.get("company")?.trim(),
+          billing: document.querySelector(".billing-toggle.active")?.dataset.billing || "monthly"
+        };
+
+        // Save full form data to localStorage
+        localStorage.setItem("pricingFormData", JSON.stringify(data));
+
+        // Inject prices after successful form submission
+        injectPrices(data.billing);
+
+        // Hide modal
+        modal.hide();
+      });
     });
   </script>
 
