@@ -551,11 +551,12 @@
         }
       });
 
-      if (storedData.billing) {
-        billingButtons.forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.billing === storedData.billing);
-        });
-      }
+      billingButtons.forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.dataset.billing === "annually") {
+          btn.classList.add("active");
+        }
+      });
 
       function injectPrices(billing) {
         const monthlyPrices = [129, 229, 329, 429];
@@ -567,25 +568,16 @@
         });
       }
 
-      // ✅ Billing button click handling
       billingButtons.forEach(button => {
         button.addEventListener("click", () => {
           billingButtons.forEach(btn => btn.classList.remove("active"));
           button.classList.add("active");
 
           const billing = button.dataset.billing;
-
-          // Save billing to localStorage
-          const data = JSON.parse(localStorage.getItem("pricingFormData") || "{}");
-          data.billing = billing;
-          localStorage.setItem("pricingFormData", JSON.stringify(data));
-
-          // Inject prices when user manually toggles
           injectPrices(billing);
         });
       });
 
-      // ✅ Form submit handling
       pricingForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -594,17 +586,14 @@
           phone: formData.get("phone")?.trim(),
           email: formData.get("email")?.trim(),
           name: formData.get("name")?.trim(),
-          company: formData.get("company")?.trim(),
-          billing: document.querySelector(".billing-toggle.active")?.dataset.billing || "monthly"
+          company: formData.get("company")?.trim()
         };
 
-        // Save full form data to localStorage
         localStorage.setItem("pricingFormData", JSON.stringify(data));
+        const billing = document.querySelector(".billing-toggle.active")?.dataset.billing || "annually";
+        injectPrices(billing);
 
-        // Inject prices after successful form submission
-        injectPrices(data.billing);
 
-        // Hide modal
         modal.hide();
       });
     });
